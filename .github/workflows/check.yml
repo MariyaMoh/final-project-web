@@ -1,43 +1,17 @@
-name: Check
-
+name: Check the source code
 on:
-  push:
-    branches:
-      - 'main'
   pull_request:
-
+    branches:
+      - main
 jobs:
-  main:
+  test:
+    name: Check the source code
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        os: [ubuntu-latest]
-        node-version: [16]
-
     steps:
       - uses: actions/checkout@v2
-
-      - uses: actions/setup-node@v2
-        with:
-          node-version: ${{ matrix.node-version }}
-
-      - name: Cache node_modules
-        id: cache-node_modules
-        uses: actions/cache@v2
-        with:
-          path: node_modules
-          key: node_modules-${{ matrix.os }}-${{ matrix.node-version }}-${{ hashFiles('package-lock.json') }}
-
-      - name: npm ci
-        if: steps.cache-node_modules.outputs.cache-hit != 'true'
-        run: npm ci --no-audit
-
-      - name: ESLint
-        run: npx --no-install eslint .
-
+      - name: Install packages
+        run: npm ci
       - name: Prettier
-        run: npx --no-install prettier --check .
-
-      - name: Build
-        run: npm run build
+        run: npm run format
+      - name: Lint
+        run: npm run lint
