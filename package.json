@@ -32,8 +32,6 @@
       "react-app/jest",
       "plugin-prettier/recommended"
     ],
-
-  
     "plugins": [
       "prettier"
     ],
